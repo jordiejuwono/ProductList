@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:product_list/common/constants.dart';
 import 'package:product_list/common/request_state.dart';
 import 'package:product_list/domain/entities/product_table.dart';
@@ -62,14 +63,24 @@ class _ProductListPageState extends State<ProductListPage> {
                       imageUrl: currentItem.thumbnail,
                       addToCart: () {
                         value.addToCart(ProductTable(
-                          id: value.productList[index].id,
-                          title: value.productList[index].title,
-                          description: value.productList[index].description,
-                          price: value.productList[index].price,
-                          brand: value.productList[index].brand,
-                          category: value.productList[index].category,
-                          thumbnail: value.productList[index].thumbnail,
+                          id: currentItem.id,
+                          title: currentItem.title,
+                          description: currentItem.description,
+                          price: currentItem.price,
+                          brand: currentItem.brand,
+                          category: currentItem.category,
+                          thumbnail: currentItem.thumbnail,
                           total: 1,
+                        ));
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              "Add ${currentItem.title} to Cart successful!"),
+                          action: SnackBarAction(
+                              label: "Check",
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, CartPage.routeName);
+                              }),
                         ));
                       });
                 });

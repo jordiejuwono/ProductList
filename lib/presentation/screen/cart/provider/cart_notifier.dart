@@ -52,7 +52,21 @@ class CartNotifier extends ChangeNotifier {
       _editState = RequestState.error;
       notifyListeners();
     }, (result) {
-      getProductCart();
+      _editState = RequestState.loaded;
+      getUpdatedCart();
+    });
+  }
+
+  Future<void> getUpdatedCart() async {
+    final result = await fetchProductCartUseCase.call(const NoParams());
+
+    result.fold((failure) {
+      _cartState = RequestState.error;
+      notifyListeners();
+    }, (result) {
+      _cartProducts = result;
+      _cartState = RequestState.loaded;
+      notifyListeners();
     });
   }
 
