@@ -136,19 +136,33 @@ class _ProductListPageState extends State<ProductListPage> {
               builder: (dialogContext) {
                 return StatefulBuilder(builder: (statefulContext, dialogState) {
                   return AlertDialog(
-                    title: Text(
-                      "Filter Price (\$)",
-                      style: kTextMediumBold,
+                    titlePadding: const EdgeInsets.only(left: 20.0, top: 8.0),
+                    title: Row(
+                      children: [
+                        Text(
+                          "Filter Price (\$)",
+                          style: kTextMediumBold,
+                        ),
+                        const Spacer(),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.black,
+                            ))
+                      ],
                     ),
                     content: SizedBox(
-                      height: 100.0,
+                      height: 90.0,
                       child: Column(
                         children: [
                           RangeSlider(
                               min: 1,
                               max: 1800,
                               values: _rangeValues,
-                              divisions: 10,
+                              divisions: 15,
                               onChanged: (values) {
                                 setState(() {
                                   _rangeValues = values;
@@ -156,9 +170,6 @@ class _ProductListPageState extends State<ProductListPage> {
                                 dialogState(() {
                                   _rangeValues = values;
                                 });
-                                // Provider.of<ProductListNotifier>(context,
-                                //         listen: false)
-                                //     .filterProduct(values.start, values.end);
                               }),
                           Padding(
                             padding:

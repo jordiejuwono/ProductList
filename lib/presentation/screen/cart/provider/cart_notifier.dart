@@ -70,8 +70,13 @@ class CartNotifier extends ChangeNotifier {
       notifyListeners();
     }, (result) {
       _cartProducts = result;
-      _cartState = RequestState.loaded;
-      notifyListeners();
+      if (result.isEmpty) {
+        _cartState = RequestState.empty;
+        notifyListeners();
+      } else {
+        _cartState = RequestState.loaded;
+        notifyListeners();
+      }
     });
   }
 
@@ -86,11 +91,16 @@ class CartNotifier extends ChangeNotifier {
       notifyListeners();
     }, (result) {
       _cartProducts = result;
-      for (var i in _cartProducts) {
-        _totalPrice += i.price;
-        _totalItem += i.total;
+      if (result.isEmpty) {
+        _cartState = RequestState.empty;
+      } else {
+        for (var i in _cartProducts) {
+          _totalPrice += i.price;
+          _totalItem += i.total;
+        }
+        _cartState = RequestState.loaded;
       }
-      _cartState = RequestState.loaded;
+
       notifyListeners();
     });
   }

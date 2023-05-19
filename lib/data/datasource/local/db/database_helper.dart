@@ -20,7 +20,6 @@ class DatabaseHelper {
   }
 
   static const String _productList = 'products';
-  static const String _transactions = 'transactions';
 
   Future<Database> _initDb() async {
     final path = await getDatabasesPath();
@@ -41,12 +40,6 @@ class DatabaseHelper {
       category TEXT,
       thumbnail TEXT,
       total INTEGER
-    )
-''');
-    await db.execute('''
-    CREATE TABLE $_transactions (
-      id INTEGER PRIMARY KEY,
-      transaction_data TEXT
     )
 ''');
   }

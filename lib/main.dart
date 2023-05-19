@@ -6,6 +6,7 @@ import 'package:product_list/presentation/screen/cart/provider/cart_notifier.dar
 import 'package:product_list/presentation/screen/cart/ui/cart_page.dart';
 import 'package:product_list/presentation/screen/product_list/provider/product_list_notifier.dart';
 import 'package:product_list/presentation/screen/product_list/ui/product_list_page.dart';
+import 'package:product_list/presentation/screen/splash_screen/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -25,10 +26,7 @@ class ProductApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: kThemeText,
       ),
-      home: ChangeNotifierProvider(
-          create: (_) => ProductListNotifier(
-              fetchProductListUseCase: locator(), insertCartUseCase: locator()),
-          child: const ProductListPage()),
+      home: const SplashScreen(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case ProductListPage.routeName:

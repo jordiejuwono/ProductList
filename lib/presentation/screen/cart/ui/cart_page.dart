@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:product_list/common/constants.dart';
+import 'package:product_list/common/request_state.dart';
 import 'package:product_list/domain/entities/product_table.dart';
+import 'package:product_list/presentation/components/card/cart_item.dart';
 import 'package:product_list/presentation/screen/cart/provider/cart_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +35,21 @@ class _CartPageState extends State<CartPage> {
           ),
         ),
         body: Consumer<CartNotifier>(builder: (context, value, child) {
+          if (value.cartState == RequestState.loading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (value.cartState == RequestState.empty) {
+            return Center(
+              child: Text(
+                "Your Cart is empty",
+                style: kHeading5.copyWith(color: Colors.grey.shade400),
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
+
           return Column(
             children: [
               Expanded(
@@ -40,218 +58,93 @@ class _CartPageState extends State<CartPage> {
                     itemBuilder: (context, index) {
                       final currentItem = value.cartProducts[index];
                       bool isClickable = currentItem.total >= 2;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8.0),
-                        child: Card(
-                          elevation: 2.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              12.0,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.network(
-                                    currentItem.thumbnail,
-                                    width: 100,
-                                    height: 120,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Expanded(
-                                    child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        currentItem.title,
-                                        style: kTextMediumBold,
-                                      ),
-                                      Text(currentItem.brand),
-                                      Text("\$ ${currentItem.price}"),
-                                      Row(
-                                        children: [
-                                          const Spacer(),
-                                          GestureDetector(
-                                            onTap: () {
-                                              if (isClickable) {
-                                                value.subtractTotalItemAndPrice(
-                                                    ProductTable(
-                                                        id: currentItem.id,
-                                                        title:
-                                                            currentItem.title,
-                                                        description: currentItem
-                                                            .description,
-                                                        price:
-                                                            currentItem.price,
-                                                        brand:
-                                                            currentItem.brand,
-                                                        category: currentItem
-                                                            .category,
-                                                        thumbnail: currentItem
-                                                            .thumbnail,
-                                                        total:
-                                                            (currentItem.total -
-                                                                1)));
-                                              }
-                                            },
-                                            child: Card(
-                                              color: isClickable
-                                                  ? Colors.blue
-                                                  : Colors.grey,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 12.0),
-                                                child: Text(
-                                                  "-",
-                                                  style:
-                                                      kTextMediumBold.copyWith(
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Card(
-                                            color: Colors.white,
-                                            elevation: 2.0,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 12.0),
-                                              child: Text(
-                                                currentItem.total.toString(),
-                                                style: kTextMediumBold.copyWith(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              value.addTotalItemAndPrice(
-                                                  ProductTable(
-                                                      id: value
-                                                          .cartProducts[index]
-                                                          .id,
-                                                      title: value
-                                                          .cartProducts[index]
-                                                          .title,
-                                                      description: value
-                                                          .cartProducts[index]
-                                                          .description,
-                                                      price: value
-                                                          .cartProducts[index]
-                                                          .price,
-                                                      brand: value
-                                                          .cartProducts[index]
-                                                          .brand,
-                                                      category: value
-                                                          .cartProducts[index]
-                                                          .category,
-                                                      thumbnail: value
-                                                          .cartProducts[index]
-                                                          .thumbnail,
-                                                      total: (value
-                                                              .cartProducts[
-                                                                  index]
-                                                              .total +
-                                                          1)));
-                                            },
-                                            child: Card(
-                                              color: Colors.blue,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 12.0),
-                                                child: Text(
-                                                  "+",
-                                                  style:
-                                                      kTextMediumBold.copyWith(
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          IconButton(
-                                              onPressed: () {
-                                                value.deleteProductCart(
-                                                    ProductTable(
-                                                  id: currentItem.id,
-                                                  title: currentItem.title,
-                                                  description:
-                                                      currentItem.description,
-                                                  price: currentItem.price,
-                                                  brand: currentItem.brand,
-                                                  category:
-                                                      currentItem.category,
-                                                  thumbnail:
-                                                      currentItem.thumbnail,
-                                                  total: currentItem.total,
-                                                ));
-                                              },
-                                              icon: const Icon(
-                                                Icons.delete,
-                                                color: Colors.red,
-                                              ))
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ))
-                              ],
-                            ),
-                          ),
-                        ),
+                      return CartItem(
+                        imageUrl: currentItem.thumbnail,
+                        title: currentItem.title,
+                        brand: currentItem.brand,
+                        price: currentItem.price.toString(),
+                        isClickable: isClickable,
+                        totalItem: currentItem.total.toString(),
+                        onSubtractClick: () {
+                          if (isClickable) {
+                            value.subtractTotalItemAndPrice(ProductTable(
+                                id: currentItem.id,
+                                title: currentItem.title,
+                                description: currentItem.description,
+                                price: currentItem.price,
+                                brand: currentItem.brand,
+                                category: currentItem.category,
+                                thumbnail: currentItem.thumbnail,
+                                total: (currentItem.total - 1)));
+                          }
+                        },
+                        onAddClick: () {
+                          value.addTotalItemAndPrice(ProductTable(
+                              id: currentItem.id,
+                              title: currentItem.title,
+                              description: currentItem.description,
+                              price: currentItem.price,
+                              brand: currentItem.brand,
+                              category: currentItem.category,
+                              thumbnail: currentItem.thumbnail,
+                              total: (currentItem.total + 1)));
+                        },
+                        onDeleteClick: () {
+                          value.deleteProductCart(ProductTable(
+                            id: currentItem.id,
+                            title: currentItem.title,
+                            description: currentItem.description,
+                            price: currentItem.price,
+                            brand: currentItem.brand,
+                            category: currentItem.category,
+                            thumbnail: currentItem.thumbnail,
+                            total: currentItem.total,
+                          ));
+                          Fluttertoast.showToast(
+                              msg: "Removed ${currentItem.title} from Cart");
+                        },
                       );
                     }),
               ),
-              Row(
-                children: [
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Total : \$ ${value.totalPrice}",
-                          style: kHeading6,
-                        ),
-                        const SizedBox(
-                          height: 12.0,
-                        ),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: ElevatedButton(
-                                onPressed: () {},
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  child: Text(
-                                    "Checkout",
-                                    style: kTextMediumBold,
-                                  ),
-                                )))
-                      ],
-                    ),
-                  ))
-                ],
-              )
+              _checkOutButton(value, context)
             ],
           );
         }),
       ),
+    );
+  }
+
+  Row _checkOutButton(CartNotifier value, BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+            child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "Total : \$ ${value.totalPrice}",
+                style: kHeading6,
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: ElevatedButton(
+                      onPressed: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Text(
+                          "Checkout",
+                          style: kTextMediumBold,
+                        ),
+                      )))
+            ],
+          ),
+        ))
+      ],
     );
   }
 }
