@@ -46,6 +46,10 @@ class ProductApp extends StatelessWidget {
                       child: const CartPage(),
                     ));
           default:
+            return MaterialPageRoute(
+                builder: (_) => const Center(
+                      child: Text("Invalid Page"),
+                    ));
         }
       },
     );
