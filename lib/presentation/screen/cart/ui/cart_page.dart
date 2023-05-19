@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:product_list/domain/entities/product_table.dart';
-import 'package:product_list/presentation/cart/provider/cart_notifier.dart';
+import 'package:product_list/presentation/screen/cart/provider/cart_notifier.dart';
 import 'package:provider/provider.dart';
 
 class CartPage extends StatefulWidget {

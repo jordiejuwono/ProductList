@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:product_list/common/constants.dart';
 import 'package:product_list/di/dependency.dart' as di;
 import 'package:product_list/di/dependency.dart';
-import 'package:product_list/presentation/cart/provider/cart_notifier.dart';
-import 'package:product_list/presentation/cart/ui/cart_page.dart';
-import 'package:product_list/presentation/product_list/provider/product_list_notifier.dart';
-import 'package:product_list/presentation/product_list/ui/product_list_page.dart';
+import 'package:product_list/presentation/screen/cart/provider/cart_notifier.dart';
+import 'package:product_list/presentation/screen/cart/ui/cart_page.dart';
+import 'package:product_list/presentation/screen/product_list/provider/product_list_notifier.dart';
+import 'package:product_list/presentation/screen/product_list/ui/product_list_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   di.init();
   runApp(const ProductApp());
 }
@@ -19,7 +20,11 @@ class ProductApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Product List App",
+      theme: ThemeData(
+        textTheme: kThemeText,
+      ),
       home: ChangeNotifierProvider(
           create: (_) => ProductListNotifier(
               fetchProductListUseCase: locator(), insertCartUseCase: locator()),
