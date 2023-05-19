@@ -50,67 +50,71 @@ class _CartPageState extends State<CartPage> {
             );
           }
 
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                    itemCount: value.cartProducts.length,
-                    itemBuilder: (context, index) {
-                      final currentItem = value.cartProducts[index];
-                      bool isClickable = currentItem.total >= 2;
-                      return CartItem(
-                        imageUrl: currentItem.thumbnail,
-                        title: currentItem.title,
-                        brand: currentItem.brand,
-                        price: currentItem.price.toString(),
-                        isClickable: isClickable,
-                        totalItem: currentItem.total.toString(),
-                        onSubtractClick: () {
-                          if (isClickable) {
-                            value.subtractTotalItemAndPrice(ProductTable(
-                                id: currentItem.id,
-                                title: currentItem.title,
-                                description: currentItem.description,
-                                price: currentItem.price,
-                                brand: currentItem.brand,
-                                category: currentItem.category,
-                                thumbnail: currentItem.thumbnail,
-                                total: (currentItem.total - 1)));
-                          }
-                        },
-                        onAddClick: () {
-                          value.addTotalItemAndPrice(ProductTable(
-                              id: currentItem.id,
-                              title: currentItem.title,
-                              description: currentItem.description,
-                              price: currentItem.price,
-                              brand: currentItem.brand,
-                              category: currentItem.category,
-                              thumbnail: currentItem.thumbnail,
-                              total: (currentItem.total + 1)));
-                        },
-                        onDeleteClick: () {
-                          value.deleteProductCart(ProductTable(
-                            id: currentItem.id,
-                            title: currentItem.title,
-                            description: currentItem.description,
-                            price: currentItem.price,
-                            brand: currentItem.brand,
-                            category: currentItem.category,
-                            thumbnail: currentItem.thumbnail,
-                            total: currentItem.total,
-                          ));
-                          Fluttertoast.showToast(
-                              msg: "Removed ${currentItem.title} from Cart");
-                        },
-                      );
-                    }),
-              ),
-              _checkOutButton(value, context)
-            ],
-          );
+          return _showCartContent(value, context);
         }),
       ),
+    );
+  }
+
+  Column _showCartContent(CartNotifier value, BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+              itemCount: value.cartProducts.length,
+              itemBuilder: (context, index) {
+                final currentItem = value.cartProducts[index];
+                bool isClickable = currentItem.total >= 2;
+                return CartItem(
+                  imageUrl: currentItem.thumbnail,
+                  title: currentItem.title,
+                  brand: currentItem.brand,
+                  price: currentItem.price.toString(),
+                  isClickable: isClickable,
+                  totalItem: currentItem.total.toString(),
+                  onSubtractClick: () {
+                    if (isClickable) {
+                      value.subtractTotalItemAndPrice(ProductTable(
+                          id: currentItem.id,
+                          title: currentItem.title,
+                          description: currentItem.description,
+                          price: currentItem.price,
+                          brand: currentItem.brand,
+                          category: currentItem.category,
+                          thumbnail: currentItem.thumbnail,
+                          total: (currentItem.total - 1)));
+                    }
+                  },
+                  onAddClick: () {
+                    value.addTotalItemAndPrice(ProductTable(
+                        id: currentItem.id,
+                        title: currentItem.title,
+                        description: currentItem.description,
+                        price: currentItem.price,
+                        brand: currentItem.brand,
+                        category: currentItem.category,
+                        thumbnail: currentItem.thumbnail,
+                        total: (currentItem.total + 1)));
+                  },
+                  onDeleteClick: () {
+                    value.deleteProductCart(ProductTable(
+                      id: currentItem.id,
+                      title: currentItem.title,
+                      description: currentItem.description,
+                      price: currentItem.price,
+                      brand: currentItem.brand,
+                      category: currentItem.category,
+                      thumbnail: currentItem.thumbnail,
+                      total: currentItem.total,
+                    ));
+                    Fluttertoast.showToast(
+                        msg: "Removed ${currentItem.title} from Cart");
+                  },
+                );
+              }),
+        ),
+        _checkOutButton(value, context)
+      ],
     );
   }
 
@@ -131,16 +135,18 @@ class _CartPageState extends State<CartPage> {
                 height: 12.0,
               ),
               SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: ElevatedButton(
-                      onPressed: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Text(
-                          "Checkout",
-                          style: kTextMediumBold,
-                        ),
-                      )))
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Text(
+                      "Checkout",
+                      style: kTextMediumBold,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ))

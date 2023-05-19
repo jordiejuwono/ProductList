@@ -81,42 +81,44 @@ class _ProductListPageState extends State<ProductListPage> {
               );
             }
 
-            return ListView.builder(
-                itemCount: value.productList.length,
-                itemBuilder: (context, index) {
-                  final currentItem = value.productList[index];
-                  return ProductItem(
-                      productName: currentItem.title,
-                      brand: currentItem.brand,
-                      price: currentItem.price.toString(),
-                      imageUrl: currentItem.thumbnail,
-                      addToCart: () {
-                        value.addToCart(ProductTable(
-                          id: currentItem.id,
-                          title: currentItem.title,
-                          description: currentItem.description,
-                          price: currentItem.price,
-                          brand: currentItem.brand,
-                          category: currentItem.category,
-                          thumbnail: currentItem.thumbnail,
-                          total: 1,
-                        ));
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              "Add ${currentItem.title} to Cart successful!"),
-                          action: SnackBarAction(
-                              label: "Check",
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                    context, CartPage.routeName);
-                              }),
-                        ));
-                      });
-                });
+            return _showProductList(value);
           },
         ),
       ),
     );
+  }
+
+  ListView _showProductList(ProductListNotifier value) {
+    return ListView.builder(
+        itemCount: value.productList.length,
+        itemBuilder: (context, index) {
+          final currentItem = value.productList[index];
+          return ProductItem(
+              productName: currentItem.title,
+              brand: currentItem.brand,
+              price: currentItem.price.toString(),
+              imageUrl: currentItem.thumbnail,
+              addToCart: () {
+                value.addToCart(ProductTable(
+                  id: currentItem.id,
+                  title: currentItem.title,
+                  description: currentItem.description,
+                  price: currentItem.price,
+                  brand: currentItem.brand,
+                  category: currentItem.category,
+                  thumbnail: currentItem.thumbnail,
+                  total: 1,
+                ));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Add ${currentItem.title} to Cart successful!"),
+                  action: SnackBarAction(
+                      label: "Check",
+                      onPressed: () {
+                        Navigator.pushNamed(context, CartPage.routeName);
+                      }),
+                ));
+              });
+        });
   }
 
   IconButton _showCartPage(BuildContext context) {
