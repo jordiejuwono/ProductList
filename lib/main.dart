@@ -43,7 +43,8 @@ class ProductApp extends StatelessWidget {
                 builder: (_) => ChangeNotifierProvider(
                       create: (_) => CartNotifier(
                           fetchProductCartUseCase: locator(),
-                          editProductUseCase: locator()),
+                          editProductUseCase: locator(),
+                          deleteProductUseCase: locator()),
                       child: const CartPage(),
                     ));
           default:

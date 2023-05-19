@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:product_list/common/request_state.dart';
 import 'package:product_list/common/use_case.dart';
-import 'package:product_list/domain/entities/product_list.dart';
 import 'package:product_list/domain/entities/product_table.dart';
+import 'package:product_list/domain/usecase/delete_product_use_case.dart';
 import 'package:product_list/domain/usecase/edit_product_use_case.dart';
 import 'package:product_list/domain/usecase/fetch_product_cart_use_case.dart';
 
 class CartNotifier extends ChangeNotifier {
   final FetchProductCartUseCase fetchProductCartUseCase;
   final EditProductUseCase editProductUseCase;
+  final DeleteProductUseCase deleteProductUseCase;
 
   CartNotifier({
     required this.fetchProductCartUseCase,
     required this.editProductUseCase,
+    required this.deleteProductUseCase,
   });
 
   RequestState _cartState = RequestState.loading;
@@ -20,6 +22,9 @@ class CartNotifier extends ChangeNotifier {
 
   RequestState _editState = RequestState.loading;
   RequestState get editState => _editState;
+
+  RequestState _deleteState = RequestState.loading;
+  RequestState get deleteState => _deleteState;
 
   List<ProductTable> _cartProducts = [];
   List<ProductTable> get cartProducts => _cartProducts;
@@ -81,12 +86,28 @@ class CartNotifier extends ChangeNotifier {
       notifyListeners();
     }, (result) {
       _cartProducts = result;
-      for (var element in _cartProducts) {
-        _totalPrice += element.price;
-        _totalItem += element.total;
+      for (var i in _cartProducts) {
+        _totalPrice += i.price;
+        _totalItem += i.total;
       }
       _cartState = RequestState.loaded;
       notifyListeners();
+    });
+  }
+
+  Future<void> deleteProductCart(ProductTable product) async {
+    _deleteState = RequestState.loading;
+    notifyListeners();
+
+    final result = await deleteProductUseCase.call(product);
+
+    result.fold((failure) {
+      _deleteState = RequestState.error;
+      notifyListeners();
+    }, (result) {
+      _totalPrice -= (product.price * product.total);
+      _deleteState = RequestState.loaded;
+      getUpdatedCart();
     });
   }
 }

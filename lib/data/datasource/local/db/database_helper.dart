@@ -1,4 +1,3 @@
-import 'package:product_list/domain/entities/product_list.dart';
 import 'package:product_list/domain/entities/product_table.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -63,10 +62,15 @@ class DatabaseHelper {
         where: 'id = ?', whereArgs: [product.id]);
   }
 
+  Future<int> deleteProduct(ProductTable product) async {
+    final db = await database;
+    return await db!
+        .delete(_productList, where: 'id = ?', whereArgs: [product.id]);
+  }
+
   Future<List<Map<String, dynamic>>> fetchProductCart() async {
     final db = await database;
     final results = await db!.query(_productList);
-    print(results);
 
     return results;
   }

@@ -184,8 +184,23 @@ class _CartPageState extends State<CartPage> {
                                             ),
                                           ),
                                           IconButton(
-                                              onPressed: () {},
-                                              icon: Icon(
+                                              onPressed: () {
+                                                value.deleteProductCart(
+                                                    ProductTable(
+                                                  id: currentItem.id,
+                                                  title: currentItem.title,
+                                                  description:
+                                                      currentItem.description,
+                                                  price: currentItem.price,
+                                                  brand: currentItem.brand,
+                                                  category:
+                                                      currentItem.category,
+                                                  thumbnail:
+                                                      currentItem.thumbnail,
+                                                  total: currentItem.total,
+                                                ));
+                                              },
+                                              icon: const Icon(
                                                 Icons.delete,
                                                 color: Colors.red,
                                               ))

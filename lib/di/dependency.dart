@@ -7,6 +7,7 @@ import 'package:product_list/data/datasource/remote/remote_data_source.dart';
 import 'package:product_list/data/mapper/data_mapper.dart';
 import 'package:product_list/data/repository/product_repository_impl.dart';
 import 'package:product_list/domain/repository/product_repository.dart';
+import 'package:product_list/domain/usecase/delete_product_use_case.dart';
 import 'package:product_list/domain/usecase/edit_product_use_case.dart';
 import 'package:product_list/domain/usecase/fetch_product_cart_use_case.dart';
 import 'package:product_list/domain/usecase/fetch_product_list_use_case.dart';
@@ -44,7 +45,9 @@ void _registerMapper() {
 
 void _registerDomain() {
   locator.registerLazySingleton<ProductRepository>(() => ProductRepositoryImpl(
-      mapper: locator(), dataSource: locator(), localDataSource: locator()));
+      mapper: locator(),
+      remoteDataSource: locator(),
+      localDataSource: locator()));
 }
 
 void _registerUseCase() {
@@ -55,4 +58,6 @@ void _registerUseCase() {
   locator.registerLazySingleton(() => InsertCartUseCase(repository: locator()));
   locator
       .registerLazySingleton(() => EditProductUseCase(repository: locator()));
+  locator
+      .registerLazySingleton(() => DeleteProductUseCase(repository: locator()));
 }
