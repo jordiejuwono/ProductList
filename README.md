@@ -1,16 +1,24 @@
-# product_list
+# product_list_app
 
-A new Flutter project.
+# Simple Application to Show List of Product
+Simple CRUD (Create, Read, Update, and Delete) using API and Local Database.
 
-## Getting Started
+<img src="https://github.com/jordiejuwono/ProductList/assets/95727832/a24ff436-d008-4a14-a28e-b37bc1979eee.png" width="650" height="650">
 
-This project is a starting point for a Flutter application.
+### **Tech Stack Used**
+```
+- Flutter (Dart)
+- Dio
+- SQFlite (Local Database)
+- Provider (State Management)
+- get_it
+- Dartz
+```
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### **Finished Features**
+```
+- Showing product list
+- Filter product by price
+- Add to cart
+- Showing cart transaction list
+```
