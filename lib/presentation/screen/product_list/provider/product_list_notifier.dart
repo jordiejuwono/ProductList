@@ -20,8 +20,8 @@ class ProductListNotifier extends ChangeNotifier {
   RequestState _addToCartState = RequestState.loading;
   RequestState get addToCartState => _addToCartState;
 
-  List<Product>? _masterList;
-  List<Product>? get masterList => _masterList;
+  List<Product> _masterList = [];
+  List<Product> get masterList => _masterList;
 
   List<Product> _productList = [];
   List<Product> get productList => _productList;
@@ -32,14 +32,18 @@ class ProductListNotifier extends ChangeNotifier {
   void filterProduct(double fromPrice, double toPrice) {
     _productList.clear();
     _productList.addAll(_masterList
-            ?.where((element) =>
-                element.price >= fromPrice && element.price <= toPrice)
-            .toList() ??
-        []);
+        .where(
+            (element) => element.price >= fromPrice && element.price <= toPrice)
+        .toList());
+    print("PRODUCT: ${_productList.length}");
     if (productList.isEmpty) {
       _fetchListState = RequestState.empty;
+
+      print("PRODUCT: EMPTY");
     } else {
       _fetchListState = RequestState.loaded;
+
+      print("PRODUCT: LOADED");
     }
     notifyListeners();
   }
@@ -54,12 +58,12 @@ class ProductListNotifier extends ChangeNotifier {
       _fetchListState = RequestState.error;
       notifyListeners();
     }, (result) {
+      _productList.addAll(result.products);
+      _masterList.addAll(result.products);
       if (result.products.isEmpty) {
         _fetchListState = RequestState.empty;
         notifyListeners();
       } else {
-        _productList.addAll(result.products);
-        _masterList?.addAll(result.products);
         _fetchListState = RequestState.loaded;
         notifyListeners();
       }

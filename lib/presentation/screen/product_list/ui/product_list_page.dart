@@ -38,96 +38,7 @@ class _ProductListPageState extends State<ProductListPage> {
             style: kHeading6,
           ),
           actions: [
-            IconButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (dialogContext) {
-                        return StatefulBuilder(
-                            builder: (statefulContext, dialogState) {
-                          return AlertDialog(
-                            titlePadding:
-                                const EdgeInsets.only(left: 20.0, top: 8.0),
-                            title: Row(
-                              children: [
-                                Text(
-                                  "Filter Price (\$)",
-                                  style: kTextMediumBold,
-                                ),
-                                const Spacer(),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    icon: const Icon(
-                                      Icons.close,
-                                      color: Colors.black,
-                                    ))
-                              ],
-                            ),
-                            content: SizedBox(
-                              height: 90.0,
-                              child: Column(
-                                children: [
-                                  RangeSlider(
-                                      min: 1,
-                                      max: 1800,
-                                      values: _rangeValues,
-                                      divisions: 15,
-                                      onChanged: (values) {
-                                        setState(() {
-                                          _rangeValues = values;
-                                        });
-                                        dialogState(() {
-                                          _rangeValues = values;
-                                        });
-                                      }),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                            "\$ ${_rangeValues.start.toInt()}"),
-                                        const Spacer(),
-                                        Text("\$ ${_rangeValues.end.toInt()}"),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            actions: [
-                              ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      dialogState(() {
-                                        _rangeValues =
-                                            const RangeValues(1, 1800);
-                                      });
-                                    });
-                                  },
-                                  child: Text(
-                                    "Reset Filter",
-                                    style: kTextMediumBold,
-                                  )),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pop(statefulContext);
-
-                                    provider.filterProduct(
-                                        _rangeValues.start, _rangeValues.end);
-                                  },
-                                  child: Text(
-                                    "Apply Filter",
-                                    style: kTextMediumBold,
-                                  ))
-                            ],
-                          );
-                        });
-                      });
-                },
-                icon: const Icon(Icons.filter_alt)),
+            _showFilterDialog(context, provider),
             _showCartPage(context)
           ],
         ),
@@ -194,5 +105,95 @@ class _ProductListPageState extends State<ProductListPage> {
           Navigator.pushNamed(context, CartPage.routeName);
         },
         icon: const Icon(Icons.shopping_cart_rounded));
+  }
+
+  IconButton _showFilterDialog(
+      BuildContext context, ProductListNotifier provider) {
+    return IconButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (dialogContext) {
+                return StatefulBuilder(builder: (statefulContext, dialogState) {
+                  return AlertDialog(
+                    titlePadding: const EdgeInsets.only(left: 20.0, top: 8.0),
+                    title: Row(
+                      children: [
+                        Text(
+                          "Filter Price (\$)",
+                          style: kTextMediumBold,
+                        ),
+                        const Spacer(),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.black,
+                            ))
+                      ],
+                    ),
+                    content: SizedBox(
+                      height: 90.0,
+                      child: Column(
+                        children: [
+                          RangeSlider(
+                              min: 1,
+                              max: 1800,
+                              values: _rangeValues,
+                              divisions: 15,
+                              onChanged: (values) {
+                                setState(() {
+                                  _rangeValues = values;
+                                });
+                                dialogState(() {
+                                  _rangeValues = values;
+                                });
+                              }),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Row(
+                              children: [
+                                Text("\$ ${_rangeValues.start.toInt()}"),
+                                const Spacer(),
+                                Text("\$ ${_rangeValues.end.toInt()}"),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              dialogState(() {
+                                _rangeValues = const RangeValues(1, 1800);
+                              });
+                            });
+                          },
+                          child: Text(
+                            "Reset Filter",
+                            style: kTextMediumBold,
+                          )),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(statefulContext);
+
+                            provider.filterProduct(
+                                _rangeValues.start, _rangeValues.end);
+                          },
+                          child: Text(
+                            "Apply Filter",
+                            style: kTextMediumBold,
+                          ))
+                    ],
+                  );
+                });
+              });
+        },
+        icon: const Icon(Icons.filter_alt));
   }
 }
